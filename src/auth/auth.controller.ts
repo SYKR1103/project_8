@@ -4,8 +4,11 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDto } from 'src/user/dto/login-user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('auth')
+
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -16,7 +19,9 @@ export class AuthController {
 
   @Post("/login")
   async loginU(@Body() l:LoginUserDto) {
-    return await this.authService.loginU(l);
+    const user =  await this.authService.loginU(l);
+    const token = await this.authService.generateJwtAccessToken(user.id)
+    return token
   }
 
 }
